@@ -7,6 +7,7 @@ def main():
 		'OUTCOME',
 		'NAME',
 		'TEAM_CITY',
+		'OPP_CITY',
 		'DATE',
 		'AST',
 		'DREB',
@@ -41,6 +42,7 @@ def main():
 
 def read_file(selected_columns, filename):
 	data = []
+	seen = set()
 	with open(filename, 'r') as f:
 		file = json.load(f)
 		for row in file:
@@ -51,6 +53,11 @@ def read_file(selected_columns, filename):
 				winner = row['vis_line']['TEAM-CITY']
 			box_score = row['box_score']
 			date = row['day']
+			check_dup = (row['home_line']['TEAM-CITY'], row['vis_line']['TEAM-CITY'], date)
+			if check_dup in seen:
+				continue
+			else:
+				seen.add(check_dup)
 
 			for i in range(26):
 				str_i = str(i)
@@ -82,6 +89,8 @@ def read_file(selected_columns, filename):
 				new_row.append(box_score['STL'][str_i])
 				new_row.append(box_score['TO'][str_i])
 				data.append(new_row)
+			# empty line for new box score
+			data.append([None] * 24)
 
 	return pd.DataFrame(data, columns=selected_columns)
 
