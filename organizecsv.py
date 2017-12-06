@@ -10,6 +10,7 @@ def main():
 		'OPP_CITY',
 		'DATE',
 		'AST',
+		'BLK',
 		'DREB',
 		'FG3A',
 		'FG3M',
@@ -70,6 +71,7 @@ def read_file(selected_columns, filename):
 				new_row.append(box_score['TEAM_CITY'][str_i])
 				new_row.append(date)
 				new_row.append(box_score['AST'][str_i])
+				new_row.append(box_score['BLK'][str_i])
 				new_row.append(box_score['DREB'][str_i])
 				new_row.append(box_score['FG3A'][str_i])
 				new_row.append(box_score['FG3M'][str_i])
@@ -90,7 +92,7 @@ def read_file(selected_columns, filename):
 				new_row.append(box_score['TO'][str_i])
 				data.append(new_row)
 			# empty line for new box score
-			data.append([None] * 24)
+			data.append([None] * 25)
 
 	return pd.DataFrame(data, columns=selected_columns)
 
