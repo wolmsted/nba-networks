@@ -7,7 +7,6 @@ def main():
 		'OUTCOME',
 		'NAME',
 		'TEAM_CITY',
-		'OPP_CITY',
 		'DATE',
 		'AST',
 		'BLK',
@@ -92,7 +91,7 @@ def read_file(selected_columns, filename):
 				new_row.append(box_score['TO'][str_i])
 				data.append(new_row)
 			# empty line for new box score
-			data.append([None] * 25)
+			data.append([None] * 24)
 
 	return pd.DataFrame(data, columns=selected_columns)
 
