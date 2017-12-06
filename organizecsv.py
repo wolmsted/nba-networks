@@ -7,6 +7,7 @@ def main():
 		'OUTCOME',
 		'NAME',
 		'TEAM_CITY',
+		'HOME',
 		'DATE',
 		'AST',
 		'BLK',
@@ -31,13 +32,13 @@ def main():
 	]
 
 	train = read_file(selected_columns, 'rotowire/train.json')
-	train.to_csv('csv_files/train.csv', columns=selected_columns)
+	train.to_csv('csv_files/train.csv', columns=selected_columns, index=False)
 
 	test = read_file(selected_columns, 'rotowire/test.json')
-	test.to_csv('csv_files/test.csv', columns=selected_columns)
+	test.to_csv('csv_files/test.csv', columns=selected_columns, index=False)
 
 	validate = read_file(selected_columns, 'rotowire/valid.json')
-	validate.to_csv('csv_files/validate.csv', columns=selected_columns)
+	validate.to_csv('csv_files/validate.csv', columns=selected_columns, index=False)
 
 
 def read_file(selected_columns, filename):
@@ -48,9 +49,9 @@ def read_file(selected_columns, filename):
 		for row in file:
 			winner = ''
 			if row['home_line']['TEAM-PTS'] > row['vis_line']['TEAM-PTS']:
-				winner = row['home_line']['TEAM-CITY']
+				winner = 1
 			else:
-				winner = row['vis_line']['TEAM-CITY']
+				winner = 0
 			box_score = row['box_score']
 			date = row['day']
 			check_dup = (row['home_line']['TEAM-CITY'], row['vis_line']['TEAM-CITY'], date)
@@ -64,10 +65,11 @@ def read_file(selected_columns, filename):
 				if str_i not in box_score['TEAM_CITY']:
 					break
 				new_row = []
-				outcome = 'W' if winner == box_score['TEAM_CITY'][str_i] else 'L'
-				new_row.append(outcome)
+				new_row.append(str(winner))
 				new_row.append(box_score['PLAYER_NAME'][str_i])
 				new_row.append(box_score['TEAM_CITY'][str_i])
+				home = '1' if row['home_line']['TEAM-CITY'] == box_score['TEAM_CITY'][str_i] else '0'
+				new_row.append(home)
 				new_row.append(date)
 				new_row.append(box_score['AST'][str_i])
 				new_row.append(box_score['BLK'][str_i])
@@ -91,7 +93,7 @@ def read_file(selected_columns, filename):
 				new_row.append(box_score['TO'][str_i])
 				data.append(new_row)
 			# empty line for new box score
-			data.append([None] * 24)
+			data.append([None] * 25)
 
 	return pd.DataFrame(data, columns=selected_columns)
 
