@@ -33,6 +33,8 @@ def main():
 		.drop('FG3_PCT', axis=1).drop('FG_PCT', axis=1).drop('FT_PCT', axis=1).drop('OREB', axis=1)
 		for j, row in datasets[i].iterrows():
 			if row['AST'] is None or np.isnan(row['AST']):
+				if not np.isnan(row['OUTCOME']):
+					datasets[i].drop(j, inplace=True)
 				continue
 			for key in max_values.keys():
 				datasets[i].set_value(j, key, discretize(max_values, key, row[key])) 
@@ -56,7 +58,6 @@ def discretize(max_values, stat, value):
 		return 3
 	else:
 		return 4
-
 
 
 if __name__ == '__main__':
