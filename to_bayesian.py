@@ -195,7 +195,6 @@ def main():
 
 	counter = 0
 	curr_row = []
-	home_and_away = []
 	max_mins = (-1, None)
 	for i in range(len(datasets)):
 		all_data = []
@@ -203,17 +202,18 @@ def main():
 		home = datasets[i]['HOME'][0]
 		reverse = not bool(home)
 		outcome = datasets[i]['OUTCOME'][0]
+		home_and_away = []
 		for j, data in datasets[i].iterrows():
 			if np.isnan(data['OUTCOME']):
 				counter = 0
 				populate_row(max_mins[1], curr_row)
 				if reverse == True:
-					all_data.append([int(outcome)] + curr_row + home_and_away[0])
+					all_data.append([int(outcome)] + curr_row + home_and_away[-1])
 				else:
-					all_data.append([int(outcome)] + home_and_away[0] + curr_row)
+					all_data.append([int(outcome)] + home_and_away[-1] + curr_row)
 				first = True
 				continue
-			if data['HOME'] != home:
+			if data['HOME'] != home and not first:
 				counter = 0
 				first = False
 				home = data['HOME']
@@ -226,6 +226,7 @@ def main():
 					home = data['HOME']
 					reverse = not bool(home)
 					outcome = data['OUTCOME']
+					first = False
 			if counter > 4:
 				if data['MIN'] > max_mins[0]:
 					max_mins = (data['MIN'], data)
