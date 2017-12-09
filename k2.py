@@ -79,6 +79,7 @@ def K2(numPossibleValues, VarToIndex, dataFrame):
     bayeScore = computeBayeScore(numPossibleValues, VarToIndex)
     nodeRemoved = False
     for node in Nodes:
+        print ("About to process node " + node)
         for possibleParent in getAvailableNodes(node, Nodes):
             if (node!= possibleParent and len(G.in_edges(node)) < 8 and (possibleParent != 'OUTCOME')):
                 G.add_edge(possibleParent, node)
@@ -104,6 +105,8 @@ def getAvailableNodes(node, Nodes):
         return ['AWAY_GUARD2_AST','AWAY_GUARD2_BLK','AWAY_GUARD2_FG3A','AWAY_GUARD2_FG3M','AWAY_GUARD2_FGA','AWAY_GUARD2_FGM','AWAY_GUARD2_FTA','AWAY_GUARD2_FTM','AWAY_GUARD2_MIN','AWAY_GUARD2_PF','AWAY_GUARD2_PTS','AWAY_GUARD2_REB','AWAY_GUARD2_STL','AWAY_GUARD2_TO']
     elif 'HOME_CENTER' in node:
         return ['AWAY_CENTER_AST','AWAY_CENTER_BLK','AWAY_CENTER_FG3A','AWAY_CENTER_FG3M','AWAY_CENTER_FGA','AWAY_CENTER_FGM','AWAY_CENTER_FTA','AWAY_CENTER_FTM','AWAY_CENTER_MIN','AWAY_CENTER_PF','AWAY_CENTER_PTS','AWAY_CENTER_REB','AWAY_CENTER_STL','AWAY_CENTER_TO']
+    elif 'HOME_6MAN' in node:
+        return ['AWAY_6MAN_AST','AWAY_6MAN_BLK','AWAY_6MAN_FG3A','AWAY_6MAN_FG3M','AWAY_6MAN_FGA','AWAY_6MAN_FGM','AWAY_6MAN_FTA','AWAY_6MAN_FTM','AWAY_6MAN_MIN','AWAY_6MAN_PF','AWAY_6MAN_PTS','AWAY_6MAN_REB','AWAY_6MAN_STL','AWAY_6MAN_TO']
     elif 'AWAY_FOR1' in node:
         return ['HOME_FOR1_AST','HOME_FOR1_BLK','HOME_FOR1_FG3A','HOME_FOR1_FG3M','HOME_FOR1_FGA','HOME_FOR1_FGM','HOME_FOR1_FTA','HOME_FOR1_FTM','HOME_FOR1_MIN','HOME_FOR1_PF','HOME_FOR1_PTS','HOME_FOR1_REB','HOME_FOR1_STL','HOME_FOR1_TO']
     elif 'AWAY_FOR2' in node:
@@ -112,6 +115,8 @@ def getAvailableNodes(node, Nodes):
         return ['HOME_GUARD1_AST','HOME_GUARD1_BLK','HOME_GUARD1_FG3A','HOME_GUARD1_FG3M','HOME_GUARD1_FGA','HOME_GUARD1_FGM','HOME_GUARD1_FTA','HOME_GUARD1_FTM','HOME_GUARD1_MIN','HOME_GUARD1_PF','HOME_GUARD1_PTS','HOME_GUARD1_REB','HOME_GUARD1_STL','HOME_GUARD1_TO']
     elif 'AWAY_GUARD2' in node:
         return ['HOME_GUARD2_AST','HOME_GUARD2_BLK','HOME_GUARD2_FG3A','HOME_GUARD2_FG3M','HOME_GUARD2_FGA','HOME_GUARD2_FGM','HOME_GUARD2_FTA','HOME_GUARD2_FTM','HOME_GUARD2_MIN','HOME_GUARD2_PF','HOME_GUARD2_PTS','HOME_GUARD2_REB','HOME_GUARD2_STL','HOME_GUARD2_TO']
+    elif 'AWAY_6MAN' in node:
+        return ['HOME_6MAN_AST','HOME_6MAN_BLK','HOME_6MAN_FG3A','HOME_6MAN_FG3M','HOME_6MAN_FGA','HOME_6MAN_FGM','HOME_6MAN_FTA','HOME_6MAN_FTM','HOME_6MAN_MIN','HOME_6MAN_PF','HOME_6MAN_PTS','HOME_6MAN_REB','HOME_6MAN_STL','HOME_6MAN_TO']
     elif 'AWAY_CENTER' in node:
         return ['HOME_CENTER_AST','HOME_CENTER_BLK','HOME_CENTER_FG3A','HOME_CENTER_FG3M','HOME_CENTER_FGA','HOME_CENTER_FGM','HOME_CENTER_FTA','HOME_CENTER_FTM','HOME_CENTER_MIN','HOME_CENTER_PF','HOME_CENTER_PTS','HOME_CENTER_REB','HOME_CENTER_STL','HOME_CENTER_TO']
     else:
@@ -156,9 +161,8 @@ def compute(infile, outfile):
     dataFrame = pd.DataFrame(DataArr, columns = NodeList)
     K2(numPossibleValues, VarToIndex, dataFrame)
     print (str(computeBayeScore(numPossibleValues, VarToIndex)))
-    plt.subplot(121)
-    nx.draw(G, with_labels=True, font_weight='bold')
-    plt.show()
+    #write_gph(G, outfile)
+    nx.write_dot(G, outfile)
 
 def main():
     if len(sys.argv) != 3:
